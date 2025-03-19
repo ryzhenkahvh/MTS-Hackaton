@@ -4,6 +4,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Device {
+    public static final String TYPE_LIGHT = "light";
+    public static final String TYPE_AC = "ac";
+    public static final String TYPE_TEMPERATURE_SENSOR = "temperature_sensor";
+    public static final String TYPE_HUMIDITY_SENSOR = "humidity_sensor";
+    public static final String TYPE_WATER_SENSOR = "water_sensor";
+    public static final String TYPE_ELECTRICITY_SENSOR = "electricity_sensor";
+    public static final String TYPE_AIR_SENSOR = "air_sensor";
     private String id;
     private String name;
     private String type;

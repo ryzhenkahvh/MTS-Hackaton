@@ -55,6 +55,9 @@ public class HomeFragment extends Fragment {
         devices.add(new Device("2", "Кондиционер", "ac"));
         devices.add(new Device("3", "Датчик температуры", "temperature_sensor"));
         devices.add(new Device("4", "Датчик влажности", "humidity_sensor"));
+        devices.add(new Device("5", "Датчик воды", Device.TYPE_WATER_SENSOR));
+        devices.add(new Device("6", "Датчик электричества", Device.TYPE_ELECTRICITY_SENSOR));
+        devices.add(new Device("7", "Датчик воздуха", Device.TYPE_AIR_SENSOR));
     }
 
     @Override
