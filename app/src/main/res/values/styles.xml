@@ -23,4 +23,18 @@
         <item name="android:textColor">@color/colorWhite</item>
         <item name="rippleColor">@color/colorPrimary</item>
     </style>
+
+    <style name="LoginButtonStyle" parent="Widget.MaterialComponents.Button">
+        <item name="backgroundTint">@color/colorPrimary</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="cornerRadius">16dp</item>
+    </style>
+
+    <style name="RegisterButtonStyle" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="backgroundTint">@android:color/transparent</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="strokeColor">@color/colorPrimary</item>
+        <item name="strokeWidth">2dp</item>
+        <item name="cornerRadius">16dp</item>
+    </style>
 </resources>

@@ -36,13 +36,12 @@
         android:textColorHint="@color/colorPrimaryDark"
         android:textColor="@color/colorWhite"/>
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/loginButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Войти"
-        android:layout_marginBottom="16dp"
-        android:textColor="@color/colorWhite"/>
+        style="@style/RegisterButtonStyle"/>
 
     <TextView
         android:id="@+id/registerLink"
