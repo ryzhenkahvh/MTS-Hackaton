@@ -297,7 +297,7 @@ public class EnhancedDeviceSimulator {
         }
     }
 
-    private void checkSensorThreshold(String deviceId, String parameter, double value,String unit, Map<String, Double> thresholds) {
+    private void checkSensorThreshold(String deviceId, String parameter, double value, String unit, Map<String, Double> thresholds) {
         Double minThreshold = thresholds.get(parameter + "_min");
         Double maxThreshold = thresholds.get(parameter + "_max");
 

@@ -1,7 +1,5 @@
 package ry.tech.mtc.fragments;
 
-import static ry.tech.mtc.MockDeviceData.updateDeviceState;
-
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -28,10 +26,10 @@ import com.google.android.material.switchmaterial.SwitchMaterial;
 import java.util.ArrayList;
 import java.util.List;
 
-import ry.tech.mtc.EnhancedDeviceSimulator;
 import ry.tech.mtc.R;
 import ry.tech.mtc.adapters.DeviceAdapter;
 import ry.tech.mtc.controllers.IoTDeviceController;
+import ry.tech.mtc.imitation.EnhancedDeviceSimulator;
 import ry.tech.mtc.interfaces.DeviceClickListener;
 import ry.tech.mtc.models.Device;
 
