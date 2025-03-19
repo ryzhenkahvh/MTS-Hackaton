@@ -1,3 +1,11 @@
 <resources>
-    <string name="app_name">MTC</string>
+    <string name="app_name">MTS-Hackaton</string>
+    <string name="perconAcc">Личный кабинет</string>
+    <string name="myDevices">Мои устройства</string>
+    <string name="addDevice">Добавить устройство</string>
+    <string name="pay">Оплата задолжностей</string>
+    <string name="checkNetwork">Проверить состояние сети</string>
+    <string name="nav_first">Мой дом</string>
+    <string name="nav_second">Управление домом</string>
+    <string name="nav_third">Профиль</string>
 </resources>

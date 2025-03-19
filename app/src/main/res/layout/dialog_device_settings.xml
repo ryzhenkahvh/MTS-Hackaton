@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@color/colorBlack">
+
+    <!-- Заголовок -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="16dp">
+
+        <ImageView
+            android:id="@+id/deviceTypeIcon"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:tint="@color/colorWhite"/>
+
+        <TextView
+            android:id="@+id/deviceNameTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="16dp"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/colorWhite"/>
+    </LinearLayout>
+
+    <!-- Основной переключатель -->
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/deviceMainSwitch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Включить устройство"
+        android:textColor="@color/colorWhite"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Настройки умной лампы -->
+    <LinearLayout
+        android:id="@+id/lightSettings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Яркость"
+            android:textColor="@color/colorWhite"
+            android:layout_marginBottom="8dp"/>
+
+        <SeekBar
+            android:id="@+id/brightnessSeekBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="100"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Цветовая температура"
+            android:textColor="@color/colorWhite"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"/>
+
+        <SeekBar
+            android:id="@+id/colorTempSeekBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="100"/>
+    </LinearLayout>
+
+    <!-- Настройки кондиционера -->
+    <LinearLayout
+        android:id="@+id/acSettings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Температура"
+            android:textColor="@color/colorWhite"
+            android:layout_marginBottom="8dp"/>
+
+        <SeekBar
+            android:id="@+id/temperatureSeekBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="30"
+            android:min="16"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Режим работы"
+            android:textColor="@color/colorWhite"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"/>
+
+        <RadioGroup
+            android:id="@+id/acModeRadioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RadioButton
+                android:id="@+id/coolMode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Охлаждение"
+                android:textColor="@color/colorWhite"/>
+
+            <RadioButton
+                android:id="@+id/heatMode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Обогрев"
+                android:textColor="@color/colorWhite"/>
+
+            <RadioButton
+                android:id="@+id/autoMode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Авто"
+                android:textColor="@color/colorWhite"/>
+        </RadioGroup>
+    </LinearLayout>
+
+    <!-- Настройки датчика -->
+    <LinearLayout
+        android:id="@+id/sensorSettings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Интервал обновления"
+            android:textColor="@color/colorWhite"
+            android:layout_marginBottom="8dp"/>
+
+        <Spinner
+            android:id="@+id/updateIntervalSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/navBackground"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Пороговые значения"
+            android:textColor="@color/colorWhite"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Минимальное значение"
+            android:textColorHint="@color/colorWhite"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/minThresholdInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal"
+                android:textColor="@color/colorWhite"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Максимальное значение"
+            android:textColorHint="@color/colorWhite"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/maxThresholdInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal"
+                android:textColor="@color/colorWhite"/>
+        </com.google.android.material.textfield.TextInputLayout>
+    </LinearLayout>
+
+</LinearLayout>

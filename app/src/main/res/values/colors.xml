@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <color name="colorPrimary">#EDE4FB</color>
+    <color name="colorPrimaryDark">#767676</color>
+    <color name="colorAccent">#03DAC5</color>
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="colorBlack">#000000</color>
+
+    <!-- Цвета для нижней навигации -->
+    <color name="bottomNavSelected">#000000</color>
+    <color name="bottomNavUnselected">#C7C7C7</color>
+    <color name="navBackground">#565656</color>
+
+    <color name="deviceBackground">#1F1F1F</color>
+    <color name="temperatureColor">#FF5722</color>
+    <color name="humidityColor">#2196F3</color>
+    <color name="lampColor">#FFC107</color>
+    <color name="acColor">#4CAF50</color>
 </resources>
