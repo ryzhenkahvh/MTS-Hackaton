@@ -11,14 +11,20 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import ry.tech.mtc.fragments.*;
+import ry.tech.mtc.imitation.SensorManager;
 
 public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
+    private SensorManager sensorManager; // Менеджер сенсоров
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Инициализируем менеджер сенсоров
+        sensorManager = new SensorManager(this);
+        sensorManager.addListener(sensorDataListener);
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnItemSelectedListener(item -> {
@@ -85,5 +91,17 @@ public class MainActivity extends AppCompatActivity {
             animationSet.addAnimation(reverseAnimation);
             view.startAnimation(animationSet);
         }
+    }
+
+    // Слушатель для получения данных сенсоров
+    private final SensorManager.OnSensorDataChangedListener sensorDataListener = data -> {
+        // Обработка полученных данных сенсоров, например, обновление UI
+        // Вы можете передавать эти данные во фрагменты или использовать в логике приложения
+    };
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        sensorManager.release(); // Освободить ресурсы сенсоров
     }
 }
