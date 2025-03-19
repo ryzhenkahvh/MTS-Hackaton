@@ -188,6 +188,33 @@
             android:layout_marginTop="24dp"
             android:layout_marginBottom="8dp"/>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Настройка устройств:"
+                android:textColor="#808080"
+                android:textSize="14sp"
+                android:textStyle="bold"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/addDeviceButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="+ Добавить устройство"
+                android:textColor="@color/colorWhite"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                app:backgroundTint="@color/navBackground"/>
+        </LinearLayout>
+
+
         <!-- Умная лампа -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"

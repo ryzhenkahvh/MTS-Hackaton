@@ -1,5 +1,7 @@
 package ry.tech.mtc.models;
 
+import android.health.connect.datatypes.Device;
+
 import java.util.ArrayList;
 import java.util.List;
 

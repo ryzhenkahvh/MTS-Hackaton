@@ -18,6 +18,39 @@ public class Device {
         this.parameters = new HashMap<>();
         this.isOnline = true;
         this.isOn = false;
+        initializeDefaultParameters();
+    }
+
+    private void initializeDefaultParameters() {
+        switch (type) {
+            case "light":
+                parameters.put("brightness", 70);
+                parameters.put("color_temp", 4000);
+                break;
+            case "ac":
+                parameters.put("temperature", 22);
+                parameters.put("mode", "cool");
+                parameters.put("fan_speed", 2);
+                break;
+            case "temperature_sensor":
+                parameters.put("current_temp", 23.5);
+                parameters.put("humidity", 45);
+                parameters.put("battery", 85);
+                break;
+            case "humidity_sensor":
+                parameters.put("humidity", 45);
+                parameters.put("temperature", 23.5);
+                parameters.put("battery", 90);
+                break;
+        }
+    }
+
+    public Object getParameter(String key) {
+        return parameters.get(key);
+    }
+
+    public void setParameter(String key, Object value) {
+        parameters.put(key, value);
     }
 
     public String getId() {
