@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MTS-Hackaton</string>
+    <string name="app_name">МТС</string>
     <string name="perconAcc">Личный кабинет</string>
     <string name="myDevices">Мои устройства</string>
     <string name="addDevice">Добавить устройство</string>
