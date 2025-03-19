@@ -21,6 +21,12 @@
             android:layout_height="24dp"
             android:tint="@color/colorWhite"/>
 
+        <ImageView
+            android:id="@+id/deviceStatusIndicator"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:layout_marginEnd="8dp"/>
+
         <TextView
             android:id="@+id/deviceName"
             android:layout_width="0dp"

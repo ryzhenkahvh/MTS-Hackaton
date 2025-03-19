@@ -28,6 +28,7 @@ import com.google.android.material.switchmaterial.SwitchMaterial;
 import java.util.ArrayList;
 import java.util.List;
 
+import ry.tech.mtc.EnhancedDeviceSimulator;
 import ry.tech.mtc.R;
 import ry.tech.mtc.adapters.DeviceAdapter;
 import ry.tech.mtc.controllers.IoTDeviceController;
@@ -39,7 +40,8 @@ public class HomeFragment extends Fragment {
     private List<Device> devices;
     private DeviceAdapter deviceAdapter;
     private Handler updateHandler;
-    private static final int UPDATE_INTERVAL = 5000; // 5 секунд
+    private static final int UPDATE_INTERVAL = 5000;
+    private EnhancedDeviceSimulator simulator;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,6 +49,18 @@ public class HomeFragment extends Fragment {
         deviceController = IoTDeviceController.getInstance();
         devices = new ArrayList<>();
         updateHandler = new Handler();
+        simulator = new EnhancedDeviceSimulator();
+        simulator.setUpdateListener(new EnhancedDeviceSimulator.SimulationUpdateListener() {
+            @Override
+            public void onDeviceDataUpdated(String deviceId, EnhancedDeviceSimulator.DeviceSimulationData data) {
+                updateDeviceData(deviceId, data);
+            }
+
+            @Override
+            public void onDeviceStatusChanged(String deviceId, boolean isConnected) {
+                updateDeviceStatus(deviceId, isConnected);
+            }
+        });
         initializeDevices();
     }
 
@@ -64,10 +78,8 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-
         setupUI(view);
-        startDataUpdates();
-
+        simulator.startSimulation();
         return view;
     }
 
@@ -80,11 +92,6 @@ public class HomeFragment extends Fragment {
             @Override
             public void onDeviceStateChanged(Device device, boolean isOn) {
                 device.setOn(isOn);
-                if (isOn) {
-                    deviceController.turnOn(device.getId());
-                } else {
-                    deviceController.turnOff(device.getId());
-                }
                 updateSensorData(getView());
             }
 
@@ -96,6 +103,11 @@ public class HomeFragment extends Fragment {
         devicesRecyclerView.setAdapter(deviceAdapter);
         devicesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        setupDeviceControls(view);
+        updateSensorData(view);
+    }
+
+    private void setupDeviceControls(View view) {
         SwitchMaterial lampSwitch = view.findViewById(R.id.lampSwitch);
         lampSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             Device lamp = findDeviceByType("light");
@@ -111,7 +123,7 @@ public class HomeFragment extends Fragment {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (fromUser) {
                     Device lamp = findDeviceByType("light");
-                    if (lamp != null) {
+                    if (lamp != null && lamp.isOn()) {
                         lamp.setParameter("brightness", progress);
                     }
                 }
@@ -132,8 +144,45 @@ public class HomeFragment extends Fragment {
                 updateSensorData(view);
             }
         });
+    }
 
-        updateSensorData(view);
+    private void updateDeviceData(String deviceId, EnhancedDeviceSimulator.DeviceSimulationData data) {
+        Device device = findDeviceById(deviceId);
+        if (device != null) {
+            switch (device.getType()) {
+                case "temperature_sensor":
+                    device.setParameter("current_temp", data.temperature);
+                    break;
+                case "humidity_sensor":
+                    device.setParameter("humidity", data.humidity);
+                    break;
+                case Device.TYPE_WATER_SENSOR:
+                    device.setParameter("water_level", data.waterLevel);
+                    break;
+                case Device.TYPE_ELECTRICITY_SENSOR:
+                    device.setParameter("power_consumption", data.powerConsumption);
+                    break;
+                case "light":
+                    if (device.isOn()) {
+                        device.setParameter("real_brightness", data.additionalParams.getOrDefault("realBrightness", 70.0));
+                    }
+                    break;
+                case "ac":
+                    if (device.isOn()) {
+                        device.setParameter("room_temperature", data.additionalParams.getOrDefault("roomTemp", 25.0));
+                    }
+                    break;
+            }
+            updateSensorData(getView());
+        }
+    }
+
+    private void updateDeviceStatus(String deviceId, boolean isConnected) {
+        Device device = findDeviceById(deviceId);
+        if (device != null) {
+            device.setParameter("is_connected", isConnected);
+            updateSensorData(getView());
+        }
     }
 
     private void updateSensorData(View view) {
@@ -174,36 +223,6 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    private void startDataUpdates() {
-        updateHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                simulateDataChanges();
-                updateSensorData(getView());
-                deviceAdapter.notifyDataSetChanged();
-                updateHandler.postDelayed(this, UPDATE_INTERVAL);
-            }
-        }, UPDATE_INTERVAL);
-    }
-
-    private void simulateDataChanges() {
-        for (Device device : devices) {
-            switch (device.getType()) {
-                case "temperature_sensor":
-                    Number currentTemp = (Number) device.getParameter("current_temp");
-                    double newTemp = currentTemp.doubleValue() + (Math.random() - 0.5);
-                    device.setParameter("current_temp", newTemp);
-                    break;
-                case "humidity_sensor":
-                    Number currentHum = (Number) device.getParameter("humidity");
-                    int newHum = currentHum.intValue() + (int) (Math.random() * 4) - 2;
-                    newHum = Math.max(30, Math.min(70, newHum));
-                    device.setParameter("humidity", newHum);
-                    break;
-            }
-        }
-    }
-
     private void showAddDeviceDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext(), R.style.DialogTheme);
         builder.setTitle("Добавить устройство");
@@ -213,20 +232,11 @@ public class HomeFragment extends Fragment {
         builder.setItems(deviceTypes, (dialog, which) -> {
             String type;
             switch (which) {
-                case 0:
-                    type = "light";
-                    break;
-                case 1:
-                    type = "ac";
-                    break;
-                case 2:
-                    type = "temperature_sensor";
-                    break;
-                case 3:
-                    type = "humidity_sensor";
-                    break;
-                default:
-                    return;
+                case 0: type = "light"; break;
+                case 1: type = "ac"; break;
+                case 2: type = "temperature_sensor"; break;
+                case 3: type = "humidity_sensor"; break;
+                default: return;
             }
 
             String newId = String.valueOf(devices.size() + 1);
@@ -242,6 +252,20 @@ public class HomeFragment extends Fragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext(), R.style.DialogTheme);
         View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_device_settings, null);
 
+        setupDeviceSettingsDialog(dialogView, device);
+
+        builder.setView(dialogView)
+                .setPositiveButton("Сохранить", (dialog, which) -> {
+                    saveDeviceSettings(device, dialogView);
+                    updateSensorData(getView());
+                    deviceAdapter.notifyDataSetChanged();
+                })
+                .setNegativeButton("Отмена", null);
+
+        builder.show();
+    }
+
+    private void setupDeviceSettingsDialog(View dialogView, Device device) {
         TextView deviceNameTitle = dialogView.findViewById(R.id.deviceNameTitle);
         ImageView deviceTypeIcon = dialogView.findViewById(R.id.deviceTypeIcon);
         SwitchMaterial deviceMainSwitch = dialogView.findViewById(R.id.deviceMainSwitch);
@@ -261,29 +285,24 @@ public class HomeFragment extends Fragment {
             case "light":
                 deviceTypeIcon.setImageResource(R.drawable.ic_lightbulb);
                 deviceTypeIcon.setColorFilter(ContextCompat.getColor(requireContext(), R.color.lampColor));
+                lightSettings.setVisibility(View.VISIBLE);
+                setupLightSettings(dialogView, device);
                 break;
             case "ac":
                 deviceTypeIcon.setImageResource(R.drawable.ic_ac);
                 deviceTypeIcon.setColorFilter(ContextCompat.getColor(requireContext(), R.color.acColor));
+                acSettings.setVisibility(View.VISIBLE);
+                setupAcSettings(dialogView, device);
                 break;
             case "temperature_sensor":
             case "humidity_sensor":
                 deviceTypeIcon.setImageResource(R.drawable.ic_sensor);
                 deviceTypeIcon.setColorFilter(ContextCompat.getColor(requireContext(),
-                        device.getType().equals("temperature_sensor") ?
-                                R.color.temperatureColor : R.color.humidityColor));
+                        device.getType().equals("temperature_sensor") ? R.color.temperatureColor : R.color.humidityColor));
+                sensorSettings.setVisibility(View.VISIBLE);
+                setupSensorSettings(dialogView, device);
                 break;
         }
-
-        builder.setView(dialogView)
-                .setPositiveButton("Сохранить", (dialog, which) -> {
-                    saveDeviceSettings(device, dialogView);
-                    updateSensorData(getView());
-                    deviceAdapter.notifyDataSetChanged();
-                })
-                .setNegativeButton("Отмена", null);
-
-        builder.show();
     }
 
     private void setupLightSettings(View dialogView, Device device) {
@@ -351,13 +370,11 @@ public class HomeFragment extends Fragment {
                 device.setParameter("brightness", brightnessSeekBar.getProgress());
                 device.setParameter("color_temp", colorTempSeekBar.getProgress() * 100);
                 break;
-
             case "ac":
                 SeekBar temperatureSeekBar = dialogView.findViewById(R.id.temperatureSeekBar);
                 RadioGroup modeRadioGroup = dialogView.findViewById(R.id.acModeRadioGroup);
                 device.setParameter("temperature", temperatureSeekBar.getProgress());
 
-                // Заменяем switch на if-else
                 int checkedId = modeRadioGroup.getCheckedRadioButtonId();
                 String mode;
                 if (checkedId == R.id.coolMode) {
@@ -377,10 +394,8 @@ public class HomeFragment extends Fragment {
                 EditText maxThresholdInput = dialogView.findViewById(R.id.maxThresholdInput);
 
                 device.setParameter("update_interval", updateIntervalSpinner.getSelectedItemPosition());
-                device.setParameter("min_threshold",
-                        Double.parseDouble(minThresholdInput.getText().toString()));
-                device.setParameter("max_threshold",
-                        Double.parseDouble(maxThresholdInput.getText().toString()));
+                device.setParameter("min_threshold", Double.parseDouble(minThresholdInput.getText().toString()));
+                device.setParameter("max_threshold", Double.parseDouble(maxThresholdInput.getText().toString()));
                 break;
         }
     }
@@ -394,9 +409,18 @@ public class HomeFragment extends Fragment {
         return null;
     }
 
+    private Device findDeviceById(String id) {
+        for (Device device : devices) {
+            if (device.getId().equals(id)) {
+                return device;
+            }
+        }
+        return null;
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
-        updateHandler.removeCallbacksAndMessages(null);
+        simulator.stopSimulation();
     }
 }
