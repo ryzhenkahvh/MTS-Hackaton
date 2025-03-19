@@ -7,8 +7,8 @@ import androidx.lifecycle.ViewModel;
 import java.util.ArrayList;
 import java.util.List;
 
-import ry.tech.mtc.models.Device;
 import ry.tech.mtc.imitation.EnhancedDeviceSimulator;
+import ry.tech.mtc.models.Device;
 
 public class DevicesViewModel extends ViewModel {
     private final MutableLiveData<List<Device>> devices = new MutableLiveData<>(new ArrayList<>());
