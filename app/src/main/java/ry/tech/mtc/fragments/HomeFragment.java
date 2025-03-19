@@ -188,38 +188,161 @@ public class HomeFragment extends Fragment {
     private void updateSensorData(View view) {
         if (view == null) return;
 
-        TextView temperatureValue = view.findViewById(R.id.temperatureValue);
-        TextView humidityValue = view.findViewById(R.id.humidityValue);
-        SwitchMaterial lampSwitch = view.findViewById(R.id.lampSwitch);
-        SeekBar brightnessSeekBar = view.findViewById(R.id.brightnessSeekBar);
-        SwitchMaterial acSwitch = view.findViewById(R.id.acSwitch);
-        TextView acTemperature = view.findViewById(R.id.acTemperature);
+        try {
+            TextView temperatureValue = view.findViewById(R.id.temperatureValue);
+            TextView temperatureStatus = view.findViewById(R.id.temperatureStatus);
+            TextView humidityValue = view.findViewById(R.id.humidityValue);
+            TextView humidityStatus = view.findViewById(R.id.humidityStatus);
+            TextView waterValue = view.findViewById(R.id.waterSensorValue);
+            TextView waterStatus = view.findViewById(R.id.waterSensorStatus);
+            TextView electricityValue = view.findViewById(R.id.electricitySensorValue);
+            TextView electricityStatus = view.findViewById(R.id.electricitySensorStatus);
 
-        Device tempSensor = findDeviceByType("temperature_sensor");
-        Device humSensor = findDeviceByType("humidity_sensor");
-        Device lamp = findDeviceByType("light");
-        Device ac = findDeviceByType("ac");
+            SwitchMaterial lampSwitch = view.findViewById(R.id.lampSwitch);
+            SeekBar brightnessSeekBar = view.findViewById(R.id.brightnessSeekBar);
+            SwitchMaterial acSwitch = view.findViewById(R.id.acSwitch);
+            TextView acTemperature = view.findViewById(R.id.acTemperature);
 
-        if (tempSensor != null) {
-            Number temp = (Number) tempSensor.getParameter("current_temp");
-            temperatureValue.setText(String.format("%.1f°C", temp.doubleValue()));
+            // Температура
+            Device tempSensor = findDeviceByType("temperature_sensor");
+            if (tempSensor != null && temperatureValue != null && temperatureStatus != null) {
+                try {
+                    Number temp = (Number) tempSensor.getParameter("current_temp");
+                    if (temp != null) {
+                        double temperature = temp.doubleValue();
+                        temperatureValue.setText(String.format("%.1f°C", temperature));
+
+                        if (temperature < 18) {
+                            temperatureStatus.setText("❗️ Низкая температура");
+                            temperatureStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorRed));
+                        } else if (temperature > 25) {
+                            temperatureStatus.setText("❗️ Высокая температура");
+                            temperatureStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorRed));
+                        } else {
+                            temperatureStatus.setText("✓ Норма");
+                            temperatureStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorGreen));
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            // Влажность
+            Device humSensor = findDeviceByType("humidity_sensor");
+            if (humSensor != null && humidityValue != null && humidityStatus != null) {
+                try {
+                    Number humidity = (Number) humSensor.getParameter("humidity");
+                    if (humidity != null) {
+                        int humidityLevel = humidity.intValue();
+                        humidityValue.setText(String.format("%d%%", humidityLevel));
+
+                        if (humidityLevel < 30) {
+                            humidityStatus.setText("❗️ Низкая влажность");
+                            humidityStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorRed));
+                        } else if (humidityLevel > 60) {
+                            humidityStatus.setText("❗️ Высокая влажность");
+                            humidityStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorRed));
+                        } else {
+                            humidityStatus.setText("✓ Норма");
+                            humidityStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorGreen));
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            // Вода
+            Device waterSensor = findDeviceByType(Device.TYPE_WATER_SENSOR);
+            if (waterSensor != null && waterValue != null && waterStatus != null) {
+                try {
+                    Number waterLevel = (Number) waterSensor.getParameter("water_level");
+                    if (waterLevel != null) {
+                        double waterLevelValue = waterLevel.doubleValue();
+                        waterValue.setText(String.format("%.1f%%", waterLevelValue));
+
+                        if (waterLevelValue < 20) {
+                            waterStatus.setText("❗️ Низкий уровень");
+                            waterStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorRed));
+                        } else if (waterLevelValue > 90) {
+                            waterStatus.setText("❗️ Высокий уровень");
+                            waterStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorRed));
+                        } else {
+                            waterStatus.setText("✓ Норма");
+                            waterStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorGreen));
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            // Электричество
+            Device electricitySensor = findDeviceByType(Device.TYPE_ELECTRICITY_SENSOR);
+            if (electricitySensor != null && electricityValue != null && electricityStatus != null) {
+                try {
+                    Number powerConsumption = (Number) electricitySensor.getParameter("power_consumption");
+                    if (powerConsumption != null) {
+                        double consumption = powerConsumption.doubleValue();
+                        electricityValue.setText(String.format("%.2f kWh", consumption));
+
+                        if (consumption > 800) {
+                            electricityStatus.setText("❗️ Высокое потребление");
+                            electricityStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorRed));
+                        } else {
+                            electricityStatus.setText("✓ Норма");
+                            electricityStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorGreen));
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            // Лампа
+            Device lamp = findDeviceByType("light");
+            if (lamp != null && lampSwitch != null && brightnessSeekBar != null) {
+                try {
+                    lampSwitch.setChecked(lamp.isOn());
+                    Number brightness = (Number) lamp.getParameter("brightness");
+                    if (brightness != null) {
+                        brightnessSeekBar.setProgress(brightness.intValue());
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            // Кондиционер
+            Device ac = findDeviceByType("ac");
+            if (ac != null && acSwitch != null && acTemperature != null) {
+                try {
+                    acSwitch.setChecked(ac.isOn());
+                    Number temp = (Number) ac.getParameter("temperature");
+                    if (temp != null) {
+                        acTemperature.setText(String.format("Установленная температура: %d°C", temp.intValue()));
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+    }
 
-        if (humSensor != null) {
-            Number humidity = (Number) humSensor.getParameter("humidity");
-            humidityValue.setText(humidity.intValue() + "%");
-        }
-
-        if (lamp != null) {
-            lampSwitch.setChecked(lamp.isOn());
-            Number brightness = (Number) lamp.getParameter("brightness");
-            brightnessSeekBar.setProgress(brightness.intValue());
-        }
-
-        if (ac != null) {
-            acSwitch.setChecked(ac.isOn());
-            Number temp = (Number) ac.getParameter("temperature");
-            acTemperature.setText(String.format("Установленная температура: %d°C", temp.intValue()));
+    private void showAlert(String title, String message) {
+        try {
+            if (getContext() != null && isAdded()) {
+                new AlertDialog.Builder(requireContext())
+                        .setTitle(title)
+                        .setMessage(message)
+                        .setPositiveButton("OK", null)
+                        .show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

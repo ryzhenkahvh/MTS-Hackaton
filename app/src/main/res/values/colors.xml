@@ -20,4 +20,8 @@
     <color name="airColor">#E2BB88</color>
     <color name="waterColor">#62D7DC</color>
     <color name="electricityColor">#DEB52F</color>
+
+    <!-- Показатели -->
+    <color name="colorRed">#FF5252</color>
+    <color name="colorGreen">#4CAF50</color>
 </resources>
