@@ -19,4 +19,9 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
+
+    <style name="ButtonStyle.Night" parent="Widget.AppCompat.Button">
+        <item name="android:background">@drawable/button_selector</item>
+        <item name="android:padding">7dp</item>
+    </style>
 </resources>

@@ -254,43 +254,43 @@
                 app:cardCornerRadius="12dp"
                 app:cardBackgroundColor="#1F1F1F">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_electricity"
+                    android:tint="@color/electricityColor"/>
+
+                <TextView
+                    android:id="@+id/electricitySensorValue"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
+                    android:text="12.50 kWh"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="8dp"/>
 
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_electricity"
-                        android:tint="@color/electricityColor"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Потребление"
+                    android:textColor="#808080"/>
 
-                    <TextView
-                        android:id="@+id/electricitySensorValue"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="12.50 kWh"
-                        android:textColor="@color/colorWhite"
-                        android:textSize="24sp"
-                        android:textStyle="bold"
-                        android:layout_marginTop="8dp"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Потребление"
-                        android:textColor="#808080"/>
-
-                    <TextView
-                        android:id="@+id/electricitySensorStatus"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:textSize="12sp"/>
-                </LinearLayout>
+                <TextView
+                    android:id="@+id/electricitySensorStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textSize="12sp"/>
+            </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
-        </LinearLayout>
+    </LinearLayout>
 
         <!-- Умные устройства -->
         <TextView
@@ -428,8 +428,6 @@
                     android:layout_marginTop="8dp"/>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
-
-
 
         <!-- ЖКХ -->
         <TextView
