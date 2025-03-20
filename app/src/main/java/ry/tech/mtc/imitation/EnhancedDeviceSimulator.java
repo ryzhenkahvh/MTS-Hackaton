@@ -17,7 +17,7 @@ public class EnhancedDeviceSimulator {
     private final Handler handler = new Handler(Looper.getMainLooper());
     private final Random random = new Random();
     private final Map<String, DeviceSimulationData> deviceData = new HashMap<>();
-    private static final int UPDATE_INTERVAL = 2000;
+    private static final int UPDATE_INTERVAL = 200;
     private boolean isRunning = false;
 
     // Сервисы для работы с датчиками
