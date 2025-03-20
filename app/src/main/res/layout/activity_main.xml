@@ -21,6 +21,7 @@
         app:menu="@menu/bottom_nav_menu"
         android:background="@color/navBackground"
         app:itemIconTint="@color/bottom_nav_colors"
-        app:itemTextColor="@color/bottom_nav_colors"/>
+        app:itemTextColor="@color/bottom_nav_colors"
+        app:itemRippleColor="#98FFFFFF"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
